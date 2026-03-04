@@ -19,7 +19,6 @@ def fetch_attestation_token() -> str:
         "token",
         "--config",
         CONFIG_PATH,
-        "--no-eventlog",
     ]
     process = subprocess.run(command, capture_output=True, text=True, timeout=TOKEN_COMMAND_TIMEOUT_SEC, check=False)
     if process.returncode != 0:
