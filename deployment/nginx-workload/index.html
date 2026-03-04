@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NGINX Intel Trust Authority Demo</title>
+  </head>
+  <body>
+    <h1>NGINX Intel Trust Authority Demo</h1>
+    <p>Attestation token fetched from Intel Trust Authority using <code>trustauthority-cli</code>:</p>
+    <pre id="token">Requesting token...</pre>
+
+    <script>
+      async function loadToken() {
+        const tokenElement = document.getElementById("token");
+        try {
+          const response = await fetch("/api/token", { cache: "no-store" });
+          const payload = await response.json();
+          if (!response.ok) {
+            tokenElement.textContent = payload.error || "Failed to request attestation token";
+            return;
+          }
+          tokenElement.textContent = payload.attestation_token || "No token returned";
+        } catch (error) {
+          tokenElement.textContent = error.message || "Unexpected error while requesting token";
+        }
+      }
+
+      loadToken();
+    </script>
+  </body>
+</html>
