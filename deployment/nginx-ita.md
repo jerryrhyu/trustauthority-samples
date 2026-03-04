@@ -49,3 +49,37 @@ docker build --no-cache -f deployment/nginx-workload/Dockerfile -t ita-nginx-dem
 
 The page calls `/api/token`, which executes `trustauthority-cli token` using
 the generated `/app/config.json` and displays the returned token.
+
+### Verify locally with curl
+
+1. Verify NGINX page is reachable:
+
+   ```bash
+   curl -i http://127.0.0.1:12780/ | head -n 20
+   ```
+
+2. Verify token API:
+
+   ```bash
+   curl -sS http://127.0.0.1:12780/api/token
+   ```
+
+   Expected success response:
+
+   ```json
+   {"attestation_token":"<jwt>"}
+   ```
+
+### Troubleshooting
+
+- If you see `exec: "tpm2_nvdefine": executable file not found in $PATH`, rebuild
+  the image with the current `deployment/nginx-workload/Dockerfile` (it installs
+  `tpm2-tools`) and restart the container.
+- If `/api/token` returns an error, check container logs:
+
+  ```bash
+  docker logs --tail 200 ita-nginx-demo
+  ```
+
+- On Azure confidential VM with Intel TDX, use `--device=/dev/tpmrm0` and
+  `--group-add $(getent group tss | cut -d: -f3)` as shown above.

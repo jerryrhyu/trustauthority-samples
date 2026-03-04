@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     nginx \
     python3 \
+    tpm2-tools \
     wget && \
     rm -rf /var/lib/apt/lists/*
 
